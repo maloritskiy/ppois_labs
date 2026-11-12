@@ -17,7 +17,8 @@ endif()
 add_library(lab1_domain STATIC
     src/set/element.cpp
     src/set/cantor_set.cpp
-    src/set/set_parser.cpp)
+    src/set/set_parser.cpp
+    src/fifteen/fifteen_puzzle.cpp)
 target_include_directories(lab1_domain PUBLIC include)
 
 if(LAB1_BUILD_TESTS)
@@ -32,7 +33,8 @@ if(LAB1_BUILD_TESTS)
 
     add_executable(lab1_tests
         tests/test_element.cpp
-        tests/test_cantor_set.cpp)
+        tests/test_cantor_set.cpp
+        tests/test_fifteen_puzzle.cpp)
     target_link_libraries(lab1_tests PRIVATE lab1_domain GTest::gtest GTest::gtest_main)
     add_test(NAME lab1_tests COMMAND lab1_tests)
 endif()
