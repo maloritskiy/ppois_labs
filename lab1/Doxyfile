@@ -1,0 +1,10 @@
+PROJECT_NAME           = "Лабораторная работа 1: Множество и Пятнашки"
+OUTPUT_DIRECTORY       = docs
+OUTPUT_LANGUAGE        = Russian
+INPUT                  = include src
+RECURSIVE              = YES
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+GENERATE_LATEX         = NO
+GENERATE_HTML          = YES
+QUIET                  = YES
