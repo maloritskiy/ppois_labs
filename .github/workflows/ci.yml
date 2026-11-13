@@ -37,22 +37,46 @@ jobs:
       - name: Static analysis
         run: cppcheck --enable=warning,performance,portability --error-exitcode=1 -I lab1/src lab1/src lab1/apps
 
+  docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lab1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+      - name: Generate documentation
+        run: doxygen Doxyfile
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: lab1-docs
+          path: lab1/docs/html
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [test, lint]
+    needs: [test, lint, docs]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ doxygen
       - name: Build release binaries
         run: |
-          sudo apt-get update && sudo apt-get install -y cmake g++
           cmake -S lab1 -B build -DCMAKE_BUILD_TYPE=Release -DLAB1_BUILD_TESTS=OFF
           cmake --build build --parallel
+      - name: Generate documentation
+        run: cd lab1 && doxygen Doxyfile
       - name: Package
-        run: tar -czf lab1-linux-x64.tar.gz -C build set_app fifteen_app
+        run: |
+          tar -czf lab1-linux-x64.tar.gz -C build set_app fifteen_app
+          tar -czf lab1-docs.tar.gz -C lab1/docs html
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          files: lab1-linux-x64.tar.gz
+          files: |
+            lab1-linux-x64.tar.gz
+            lab1-docs.tar.gz
