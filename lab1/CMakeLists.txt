@@ -19,6 +19,18 @@ add_library(lab1_domain STATIC
     src/fifteen_puzzle.cpp)
 target_include_directories(lab1_domain PUBLIC src)
 
+add_library(lab1_ui STATIC
+    src/console_input.cpp
+    src/set_menu.cpp
+    src/fifteen_menu.cpp)
+target_link_libraries(lab1_ui PUBLIC lab1_domain)
+
+add_executable(set_app apps/set_main.cpp)
+target_link_libraries(set_app PRIVATE lab1_ui)
+
+add_executable(fifteen_app apps/fifteen_main.cpp)
+target_link_libraries(fifteen_app PRIVATE lab1_ui)
+
 if(LAB1_BUILD_TESTS)
     enable_testing()
     find_package(GTest QUIET)
@@ -31,7 +43,10 @@ if(LAB1_BUILD_TESTS)
 
     add_executable(lab1_tests
         tests/test_cantor_set.cpp
-        tests/test_fifteen_puzzle.cpp)
-    target_link_libraries(lab1_tests PRIVATE lab1_domain GTest::gtest GTest::gtest_main)
+        tests/test_fifteen_puzzle.cpp
+        tests/test_console_input.cpp
+        tests/test_set_menu.cpp
+        tests/test_fifteen_menu.cpp)
+    target_link_libraries(lab1_tests PRIVATE lab1_ui GTest::gtest GTest::gtest_main)
     add_test(NAME lab1_tests COMMAND lab1_tests)
 endif()
