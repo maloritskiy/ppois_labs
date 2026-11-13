@@ -195,7 +195,7 @@ std::istream& operator>>(std::istream& in, FifteenPuzzle& puzzle) {
         in.setstate(std::ios::failbit);
         return in;
     }
-    int cells[FifteenPuzzle::kMaxSize * FifteenPuzzle::kMaxSize];
+    int cells[FifteenPuzzle::kMaxSize * FifteenPuzzle::kMaxSize] = {0};
     for (int i = 0; i < size * size; ++i) {
         if (!(in >> cells[i])) {
             return in;
