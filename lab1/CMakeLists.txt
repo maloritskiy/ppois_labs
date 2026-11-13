@@ -15,24 +15,9 @@ if(LAB1_ENABLE_COVERAGE)
 endif()
 
 add_library(lab1_domain STATIC
-    src/set/element.cpp
-    src/set/cantor_set.cpp
-    src/set/set_parser.cpp
-    src/fifteen/fifteen_puzzle.cpp)
-target_include_directories(lab1_domain PUBLIC include)
-
-add_library(lab1_ui STATIC
-    src/ui/console_io.cpp
-    src/ui/menu.cpp
-    src/ui/set_cli.cpp
-    src/ui/fifteen_cli.cpp)
-target_link_libraries(lab1_ui PUBLIC lab1_domain)
-
-add_executable(set_app apps/set_main.cpp)
-target_link_libraries(set_app PRIVATE lab1_ui)
-
-add_executable(fifteen_app apps/fifteen_main.cpp)
-target_link_libraries(fifteen_app PRIVATE lab1_ui)
+    src/cantor_set.cpp
+    src/fifteen_puzzle.cpp)
+target_include_directories(lab1_domain PUBLIC src)
 
 if(LAB1_BUILD_TESTS)
     enable_testing()
@@ -45,12 +30,8 @@ if(LAB1_BUILD_TESTS)
     endif()
 
     add_executable(lab1_tests
-        tests/test_element.cpp
         tests/test_cantor_set.cpp
-        tests/test_fifteen_puzzle.cpp
-        tests/test_ui_basics.cpp
-        tests/test_set_cli.cpp
-        tests/test_fifteen_cli.cpp)
-    target_link_libraries(lab1_tests PRIVATE lab1_ui GTest::gtest GTest::gtest_main)
+        tests/test_fifteen_puzzle.cpp)
+    target_link_libraries(lab1_tests PRIVATE lab1_domain GTest::gtest GTest::gtest_main)
     add_test(NAME lab1_tests COMMAND lab1_tests)
 endif()
