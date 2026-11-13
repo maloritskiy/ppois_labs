@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "ui/set_cli.hpp"
+#include "set_menu.h"
 
 int main() {
-    lab1::ui::SetCli cli(std::cin, std::cout);
-    cli.run();
+    SetMenu menu(std::cin, std::cout);
+    menu.run();
     return 0;
 }
