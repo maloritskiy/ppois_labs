@@ -4,7 +4,14 @@ on:
   push:
     branches: ["**"]
     tags: ["v*.*.*"]
+    paths:
+      - 'lab2/**'
+      - '.github/workflows/lab2-ci.yml'
+
   pull_request:
+    paths:
+      - 'lab2/**'
+      - '.github/workflows/lab2-ci.yml'
 
 permissions:
   contents: write
