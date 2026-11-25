@@ -3,7 +3,7 @@ name: C++ CI
 on:
   push:
     branches: ["**"]
-    tags: ["v*.*.*"]
+    tags: ["lab2-v*.*.*"]
     paths:
       - 'lab2/**'
       - '.github/workflows/lab2-ci.yml'
@@ -54,7 +54,7 @@ jobs:
 
   release:
     name: Publish release artifact
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/lab2-v')
     needs: [build-test, static-analysis]
     runs-on: ubuntu-latest
     steps:
