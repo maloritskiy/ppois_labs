@@ -20,3 +20,9 @@ lab2/audio_collection_cli
 lab2/audio_collection_tests
 lab2/audio_collection_tests_coverage
 lab2/audio_collection_cli_release
+
+# Исполняемые файлы лабораторной работы №3
+lab3/restaurant_cli
+lab3/restaurant_tests
+lab3/restaurant_tests_coverage
+lab3/restaurant_cli_release
