@@ -1,0 +1,80 @@
+name: Lab3 C++ CI
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["lab3-v*.*.*"]
+    paths:
+      - 'lab3/**'
+      - '.github/workflows/lab3-ci.yml'
+      - '.gitignore'
+
+  pull_request:
+    paths:
+      - 'lab3/**'
+      - '.github/workflows/lab3-ci.yml'
+      - '.gitignore'
+
+permissions:
+  contents: write
+
+jobs:
+  build-test:
+    name: Build, unit tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install coverage tool
+        run: sudo apt-get update && sudo apt-get install -y gcovr
+
+      - name: Build program and run tests
+        run: make -C lab3 clean all test coverage
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: restaurant-management-linux
+          path: lab3/restaurant_cli
+
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck
+        run: >-
+          cppcheck --enable=warning,performance,portability
+          --error-exitcode=1 --suppress=missingIncludeSystem --std=c++17
+          lab3/restaurant_*.hpp lab3/main.cpp lab3/tests.cpp
+
+  release:
+    name: Publish release artifact
+    if: startsWith(github.ref, 'refs/tags/lab3-v')
+    needs: [build-test, static-analysis]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build release executable
+        run: make -C lab3 release
+
+      - name: Package executable
+        run: |
+          mkdir -p release-package
+          cp lab3/restaurant_cli_release release-package/restaurant_cli
+          cp lab3/README.md release-package/
+          tar -czf restaurant-management-${GITHUB_REF_NAME}-linux.tar.gz -C release-package .
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: restaurant-management-${{ github.ref_name }}-linux.tar.gz
+          generate_release_notes: true
